@@ -38,33 +38,26 @@
     <h1>Vang het rode blokje!</h1>
     <h2>Score: <span id="score">0</span></h2>
 
-    <!-- Het speelveld met daarin het blokje -->
-    <div id="speelveld">
-        <div id="blokje" onclick="raakGeklikt()"></div>
+   <div id="speelveld">
+        <!-- Let op: 'onclick' is hier weggehaald -->
+        <div id="blokje"></div>
     </div>
 
     <script>
-        // 1. We maken een variabele aan om de score bij te houden
         let score = 0;
+        let blokje = document.getElementById("blokje");
 
-        // 2. Deze functie wordt uitgevoerd als je op het blokje klikt
-        function raakGeklikt() {
-            // Verhoog de score met 1
+        // We koppelen de klik nu via JavaScript in plaats van in de HTML
+        blokje.addEventListener("click", function() {
             score = score + 1;
-            
-            // Laat de nieuwe score zien op het scherm
             document.getElementById("score").innerText = score;
 
-            // Bedenk een willekeurige nieuwe plek (tussen 0 en 350 pixels)
-            // 350 omdat het veld 400 is en het blokje zelf 50 breed is
             let nieuweX = Math.floor(Math.random() * 350);
             let nieuweY = Math.floor(Math.random() * 350);
 
-            // Verplaats het blokje naar de nieuwe plek
-            let blokje = document.getElementById("blokje");
             blokje.style.left = nieuweX + "px";
             blokje.style.top = nieuweY + "px";
-        }
+        });
     </script>
 
 </body>
