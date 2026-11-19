@@ -2,147 +2,69 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JavaScript Events & Console Logging</title>
+    <title>Vang het Blokje!</title>
     <style>
+        /* Dit zorgt ervoor dat alles netjes in het midden staat */
         body {
-            font-family: system-ui, -apple-system, sans-serif;
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 20px;
-            background-color: #f4f4f9;
-            color: #333;
-            line-height: 1.6;
-        }
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-        button {
-            background-color: #0066cc;
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        button:hover {
-            background-color: #0052a3;
-        }
-        #hover-box {
-            background-color: #e2e8f0;
-            padding: 20px;
+            font-family: Arial, sans-serif;
             text-align: center;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            user-select: none;
+            background-color: #f0f0f0;
         }
-        input {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
+
+        /* Het speelveld */
+        #speelveld {
+            width: 400px;
+            height: 400px;
+            background-color: white;
+            border: 3px solid black;
+            margin: 20px auto; /* Centreert het vak */
+            position: relative; /* Nodig zodat het blokje hierbinnen blijft */
         }
-        .hint {
-            font-size: 0.9em;
-            color: #666;
+
+        /* Het rode blokje waar je op moet klikken */
+        #blokje {
+            width: 50px;
+            height: 50px;
+            background-color: red;
+            position: absolute; /* Hiermee kunnen we het blokje verplaatsen */
+            top: 100px;
+            left: 100px;
+            cursor: pointer; /* Verandert de muis in een handje */
         }
     </style>
 </head>
 <body>
 
-    <h1>JavaScript Events Demo</h1>
-    <p class="hint">Open je browserconsole (F12) om te zien wat er achter de schermen gebeurt!</p>
+    <h1>Vang het rode blokje!</h1>
+    <h2>Score: <span id="score">0</span></h2>
 
-    <!-- 1. Click & Dubbelklik Event -->
-    <div class="card">
-        <h2>1. Klikken</h2>
-        <button id="klik-knop">Klik (of dubbelklik) op mij</button>
-        <p>Aantal keer geklikt: <strong id="teller">0</strong></p>
-    </div>
-
-    <!-- 2. Mouseover / Mouseout Event -->
-    <div class="card">
-        <h2>2. Muisbewegingen</h2>
-        <div id="hover-box">Beweeg je muis over dit vlak</div>
-    </div>
-
-    <!-- 3. Input Event -->
-    <div class="card">
-        <h2>3. Live typen</h2>
-        <input type="text" id="tekst-veld" placeholder="Typ hier iets...">
-        <p>Live weergave: <span id="live-output">...</span></p>
+    <!-- Het speelveld met daarin het blokje -->
+    <div id="speelveld">
+        <div id="blokje" onclick="raakGeklikt()"></div>
     </div>
 
     <script>
-        // Log direct bij het laden van de pagina
-        console.log("%c🚀 Pagina succesvol geladen! Klaar voor interactie.", "color: green; font-weight: bold; font-size: 14px;");
+        // 1. We maken een variabele aan om de score bij te houden
+        let score = 0;
 
-        // --- 1. CLICK & DBLCLICK ---
-        const knop = document.getElementById('klik-knop');
-        const tellerDisplay = document.getElementById('teller');
-        let aantalKliks = 0;
+        // 2. Deze functie wordt uitgevoerd als je op het blokje klikt
+        function raakGeklikt() {
+            // Verhoog de score met 1
+            score = score + 1;
+            
+            // Laat de nieuwe score zien op het scherm
+            document.getElementById("score").innerText = score;
 
-        knop.addEventListener('click', (event) => {
-            aantalKliks++;
-            tellerDisplay.textContent = aantalKliks;
-            console.log(`🖱️ Klik event! Totaal aantal kliks: ${aantalKliks}`, {
-                xPositie: event.clientX,
-                yPositie: event.clientY
-            });
-        });
+            // Bedenk een willekeurige nieuwe plek (tussen 0 en 350 pixels)
+            // 350 omdat het veld 400 is en het blokje zelf 50 breed is
+            let nieuweX = Math.floor(Math.random() * 350);
+            let nieuweY = Math.floor(Math.random() * 350);
 
-        knop.addEventListener('dblclick', () => {
-            console.warn("⚡ Dubbelklik gedetecteerd! Je hebt haast.");
-            knop.style.backgroundColor = '#d97706';
-            setTimeout(() => knop.style.backgroundColor = '#0066cc', 500);
-        });
-
-        // --- 2. MOUSEENTER & MOUSELEAVE ---
-        const hoverBox = document.getElementById('hover-box');
-
-        hoverBox.addEventListener('mouseenter', () => {
-            hoverBox.style.backgroundColor = '#3b82f6';
-            hoverBox.style.color = 'white';
-            hoverBox.textContent = 'Je muis is binnen!';
-            console.info("➡️ Muis betrad het vlak (mouseenter)");
-        });
-
-        hoverBox.addEventListener('mouseleave', () => {
-            hoverBox.style.backgroundColor = '#e2e8f0';
-            hoverBox.style.color = '#333';
-            hoverBox.textContent = 'Beweeg je muis over dit vlak';
-            console.info("⬅️ Muis verliet het vlak (mouseleave)");
-        });
-
-        // --- 3. INPUT EVENT ---
-        const tekstVeld = document.getElementById('tekst-veld');
-        const liveOutput = document.getElementById('live-output');
-
-        tekstVeld.addEventListener('input', (event) => {
-            const huidigeTekst = event.target.value;
-            liveOutput.textContent = huidigeTekst || '...';
-            console.log(`⌨️ Tekst aangepast: "${huidigeTekst}" (Lengte: ${huidigeTekst.length})`);
-        });
-
-        // --- 4. GLOBAAL KEYDOWN EVENT ---
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') {
-                console.error("🛑 Escape-toets ingedrukt! Teller en invoerveld worden gereset.");
-                aantalKliks = 0;
-                tellerDisplay.textContent = 0;
-                tekstVeld.value = '';
-                liveOutput.textContent = '...';
-            }
-        });
+            // Verplaats het blokje naar de nieuwe plek
+            let blokje = document.getElementById("blokje");
+            blokje.style.left = nieuweX + "px";
+            blokje.style.top = nieuweY + "px";
+        }
     </script>
 
 </body>
